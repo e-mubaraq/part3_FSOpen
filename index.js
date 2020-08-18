@@ -74,6 +74,12 @@ app.post('/api/persons', (req, res) => {
             error: 'Name missing'
         })
     }
+
+    if (persons.some(p => p.name === body.name)) {
+        return res.status(400).json({
+            error: 'Name already exist'
+        })
+    }
     
     const person = {
         name: body.name,
