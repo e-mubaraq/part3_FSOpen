@@ -5,6 +5,7 @@ const app = express()
 const Person = require('./models/person')
 
 const cors = require('cors')
+const person = require('./models/person')
 
 app.use(cors())
 app.use(express.json())
@@ -64,14 +65,18 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
+    /*const id = Number(req.params.id)
     const person = persons.find(p => p.id === id)
     if (person) {
         res.json(person)
+        
     }
     else {
         res.status(404).end()
-    }
+    }*/
+    Person.findById(req.params.id).then(person => {
+        res.json(person)
+    })
 })
 
 app.delete('/api/persons/:id', (req,res) => {
@@ -85,8 +90,6 @@ const generateId = () =>  Math.floor((Math.random() * 20) + 1)
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
-    console.log(body)
-    console.log(generateId)
 
     if (!body.name || !body.number) {
         return res.status(400).json({
@@ -94,20 +97,24 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    if (persons.some(p => p.name === body.name)) {
+    /*if (persons.some(p => p.name === body.name)) {
         return res.status(400).json({
             error: 'Name already exist'
         })
-    }
+    }*/
     
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateId()
-    }
+        //id: generateId()
+    })
 
-    persons = persons.concat(person)
-    res.json(person)
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
+
+    //persons = persons.concat(person)
+    //res.json(person)
 })
 
 const PORT = process.env.PORT || 3001
