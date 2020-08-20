@@ -56,7 +56,7 @@ app.get('/info', (req, res) => {
     const d = new Date()
     res.send(
     `<div>
-        <p>Phonebook has info for ${persons.length} people</p>
+        <p>Phonebook has info for ${Person.length} people</p>
         <p>${d}</p>
     </div>`
     )

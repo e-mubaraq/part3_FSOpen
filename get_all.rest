@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/persons/3
+GET http://localhost:3001/api/persons/
 #https://agile-savannah-15025.herokuapp.com/api/persons
