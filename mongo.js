@@ -11,7 +11,7 @@ const url =
   `mongodb+srv://fullstack:${password}@cluster0.3zjm1.mongodb.net/phonebook?retryWrites=true`
 
 
- // mongodb+srv://fullstack:<password>@cluster0.3zjm1.mongodb.net/<dbname>?retryWrites=true&w=majority
+// mongodb+srv://fullstack:<password>@cluster0.3zjm1.mongodb.net/<dbname>?retryWrites=true&w=majority
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const personSchema = new mongoose.Schema({
@@ -27,18 +27,18 @@ const person = new Person({
 })
 
 if (sz === 3) {
-    Person.find({}).then(result => {
-        console.log('phonebook:')
-        result.forEach(pers => {
-            console.log(`${pers.name} ${pers.number}`)
-        })
-        mongoose.connection.close()
+  Person.find({}).then(result => {
+    console.log('phonebook:')
+    result.forEach(pers => {
+      console.log(`${pers.name} ${pers.number}`)
     })
+    mongoose.connection.close()
+  })
 }
 
 if (sz > 3) {
-    person.save().then(result => {
-        console.log(`added ${person.name} number ${person.number} to phonebook`)
-        mongoose.connection.close()
-      })
+  person.save().then(() => {
+    console.log(`added ${person.name} number ${person.number} to phonebook`)
+    mongoose.connection.close()
+  })
 }
