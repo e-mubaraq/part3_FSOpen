@@ -84,7 +84,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 const generateId = () =>  Math.floor((Math.random() * 20) + 1)
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
 
     if (!body.name || !body.number) {
@@ -92,21 +92,17 @@ app.post('/api/persons', (req, res) => {
             error: 'Name missing'
         })
     }
-
-    /*if (persons.some(p => p.name === body.name)) {
-        return res.status(400).json({
-            error: 'Name already exist'
-        })
-    }*/
     
     const person = new Person({
         name: body.name,
         number: body.number,
     })
 
-    person.save().then(savedPerson => {
+    person.save()
+    .then(savedPerson => {
         res.json(savedPerson)
     })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -128,10 +124,13 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-    console.log(error.message)
+    console.log('****', error.message)
 
     if (error.name === 'CastError') {
         return res.status(400).send({error: 'malformated id'})
+    }
+    else if (error.name === 'ValidationError') {
+        return res.status(400).json({ error: error.message })
     }
     next(error)
 }
